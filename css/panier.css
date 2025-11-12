@@ -1,0 +1,35 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+.cart-item-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.cart-item-info {
+    flex: 1;
+}
+
+.cart-item-price {
+    color: #e74c3c;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.cart-summary {
+    background: #f0f0f0;
+    padding: 1.5rem;
+    border-radius: 5px;
+    margin-top: 2rem;
+    text-align: right;
+}
+
+.cart-total {
+    font-size: 1.8rem;
+    color: #e74c3c;
+    font-weight: bold;
+    margin: 1rem 0;
+}

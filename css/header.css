@@ -1,0 +1,39 @@
+/* HEADER*/
+
+header{
+    background-color:f6f6f6;
+    padding: 1rem;
+}
+.header-container{
+    max-width: 1200px;
+    height: 60px;
+    margin: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.logo{
+    width: 70px;
+    height: 30px;
+    margin-left: 20px;
+    margin-top: -40px;
+    
+}
+nav ul{
+    list-style: none;
+    display: flex;
+}    
+li{
+    padding: 0 2rem;
+    
+}
+li a{
+    color: black;
+    padding: 0.5rem;
+}
+li a:hover{
+    background: goldenrod;
+    color: white;
+    border: black 2px solid;
+    border-radius: 5px;
+}
