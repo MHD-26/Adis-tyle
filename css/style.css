@@ -19,7 +19,7 @@ a{
 /* Interface */
 
 .hero{
-   @media screen, print { background-image:url(../image/back.jpg); } 
+    background-image:url(../image/back.jpg);
     width: 100%;
     background-repeat: no-repeat;
     background-size: cover;
