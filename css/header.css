@@ -13,9 +13,9 @@ header{
     align-items: center;
 }
 .logo{
-    width: 70px;
+    width: 50px;
     height: 30px;
-    margin-left: 20px;
+    margin-left: -10px;
     margin-top: -40px;
     
 }
@@ -36,4 +36,21 @@ li a:hover{
     color: white;
     border: black 2px solid;
     border-radius: 5px;
+}
+@media screen and (max-width: 590px) {
+
+    .logo {
+        margin: 0;
+        padding: 0;
+        width: 20px;
+        height: 20px;
+    }
+    .header-container {
+        height: 30px;
+        width: auto;
+    }
+    .navbar{
+        font-size: 10px;
+    }
+    
 }
