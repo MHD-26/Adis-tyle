@@ -87,14 +87,13 @@ a{
     
 }
 @media screen and (max-width: 590px) {
-    .hero{
-        width: auto;
+    .hero  {
+        background-image:url(../image/backmedia.jpg);
     }
     .products-grid{
         gap: 2rem;
     grid-template-columns: repeat(auto-fit,minmax(150px,2fr));
-    }
-    
+    }       
 }
 
 
