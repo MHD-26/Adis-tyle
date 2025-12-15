@@ -86,14 +86,55 @@ a{
     height: 400px;
     
 }
-@media screen and (max-width: 590px) {
-    .hero  {
-        background-image:url(../image/backmedia.jpg);
+
+/* ===================================== */
+/* AJOUTS POUR LA RESPONSIVITÉ GLOBALE */
+/* ===================================== */
+
+/* Conteneur principal pour limiter la largeur et centrer le contenu */
+.header-container,
+.footer-container,
+.section,
+.hero {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+/* Réduire la taille de la police des titres sur les petits écrans */
+@media (max-width: 600px) {
+    h1 {
+        font-size: 2em; /* Réduit le titre principal */
     }
-    .products-grid{
-        gap: 2rem;
-    grid-template-columns: repeat(auto-fit,minmax(150px,2fr));
-    }       
+    h2 {
+        font-size: 1.6em;
+    }
 }
 
 
+/* ===================================== */
+/* AJOUTS POUR LA SECTION PRODUITS */
+/* ===================================== */
+
+/* Point de rupture pour les tablettes (passer de 4 à 2 colonnes) */
+@media (max-width: 992px) {
+    .products-grid {
+        grid-template-columns: repeat(2, 1fr); /* Affiche 2 produits par ligne */
+    }
+}
+
+/* Point de rupture pour les téléphones (passer de 2 à 1 colonne) */
+@media (max-width: 576px) {
+    .products-grid {
+        grid-template-columns: 1fr; /* Affiche 1 produit par ligne (colonne unique) */
+    }
+}
+@media (max-width: 600px) {
+    .hero {
+        /* Réduire la hauteur sur les petits écrans */
+        min-height: 350px; 
+        padding: 50px 10px;
+        
+        /* On peut retirer l'effet parallax sur mobile pour des raisons de performance */
+        background-attachment: scroll; 
+    }
+}

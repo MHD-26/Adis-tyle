@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Votre Panier - Adis'tyle</title>
+    
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/footer.css">
+    <link rel="stylesheet" href="../css/panier.css"> 
+</head>
+<body>
+
+    <header>
+        <div class="header-container">
+            <a href="../index.html" class="logo">
+                <img src="../image/logo-removebg-preview.png" alt="Logo Adis'tyle">
+            </a>
+            
+            <button class="hamburger-menu" aria-label="Ouvrir le menu de navigation" id="menu-toggle" aria-expanded="false">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+
+            <nav id="main-nav" aria-label="Menu principal"> 
+                <ul class="navbar">
+                    <li><a href="../index.html">Accueil</a></li>
+                    <li><a href="produits.html">Produits</a></li>
+                    <li><a href="panier.html" class="active">Panier</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="panier-section">
+            <h1>Votre Panier</h1>
+
+            <div class="panier-liste" id="panier-liste-articles">
+                
+                <div class="panier-article" data-id="1">
+                    <img src="../image/produit-robe-noire.jpg" alt="Robe Africaine Noire et Or">
+                    <div class="article-details">
+                        <p class="article-nom">Robe Chic Dorée</p>
+                        <p class="article-prix" data-prix="75.00">75,00 €</p>
+                    </div>
+                    <div class="article-quantite">
+                        <button class="quantite-btn" data-id="1" data-action="decrement">-</button>
+                        <input type="number" value="1" min="1" class="quantite-input" data-id="1" readonly>
+                        <button class="quantite-btn" data-id="1" data-action="increment">+</button>
+                    </div>
+                    <div class="article-total">75,00 €</div> 
+                    <button class="article-supprimer" data-id="1">Supprimer</button>
+                </div>
+                
+            </div>
+
+            <div class="panier-recapitulatif">
+                <h2>Récapitulatif de la commande</h2>
+                <div class="recap-ligne">
+                    <span>Sous-total :</span>
+                    <span id="sous-total">0,00 €</span>
+                </div>
+                <div class="recap-ligne">
+                    <span>Livraison :</span>
+                    <span id="frais-livraison">5,00 €</span> 
+                </div>
+                <hr>
+                <div class="recap-ligne total">
+                    <span>Total à payer :</span>
+                    <span id="total-final">5,00 €</span>
+                </div>
+                
+                <button class="btn-checkout">Passer à la caisse</button>
+            </div>
+            
+        </section>
+    </main>
+
+    <script src="../js/script.js"></script>
+</body>
+</html>

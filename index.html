@@ -7,22 +7,32 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="./css/header.css">
     <link rel="stylesheet" href="./css/footer.css">
+    <script src="./js/script.js"></script>
+
 </head>
 <body>
     <!-- HEADER -->
     <header>
         <div class="header-container">
-            <a href="index.html" class="logo"><img src="image/logo-removebg-preview.png" alt=""></a>
-            <nav>
+            <a href="index.html" class="logo">
+                <img src="image/logo-removebg-preview.png" alt="Logo Adis'tyle">
+            </a>
+            
+            <button class="hamburger-menu" aria-label="Ouvrir le menu de navigation" id="menu-toggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+
+            <nav id="main-nav" aria-label="Menu principal"> 
                 <ul class="navbar">
-                    <li><a href="index.html">Acceuil</a></li>
+                    <li><a href="index.html">Accueil</a></li>
                     <li><a href="pages/produits.html">Produits</a></li>
-                    <li><a href="pages/panier.html">panier</a></li>
+                    <li><a href="pages/panier.html">Panier</a></li>
                 </ul>
             </nav>
         </div>
-    </header> 
-
+    </header>
     <!-- HERO -->
     <div class="hero">
         <h1><i>Bienvenue chez Adis'tyle</i></h1>
@@ -35,61 +45,58 @@
         <h2 class="section-title">Nos produits</h2>
         
         <div class="products-grid">
-            <!-- Produit 1 -->
-            <div class="product-card">
-                <img src="./image/alo noir.jpg" alt="" class="product-image">
+            
+            <div class="product-card" data-id="1">
+                <img src="image/alo noir.jpg" alt="Tee-shirt Alo noir" class="product-image">
                 <div class="product-info">
-                    <h3 class="product-name">Tee-shirt Alo </h3>
-                    <p class="product-description">tee-shirt 100% coton</p>
-                    <p class="product-price">8000f</p>
-                    <a href="product-detail.html" class="btn">Voir</a>
+                    <h3 class="product-name">Tee-shirt Alo</h3>
+                    <p class="product-description">Tee-shirt 100% coton</p>
+                    <p class="product-price" data-price="8000">8000f</p>
+                    <button class="btn-add-to-cart" data-id="1">Ajouter au Panier</button>
                 </div>
             </div>
 
-            <!-- Produit 2 -->
-            <div class="product-card">
-                <img src="./image/bas rouge.jpg" alt="" class="product-image">
+            <div class="product-card" data-id="2">
+                <img src="image/bas rouge.jpg" alt="Leggings rouge" class="product-image">
                 <div class="product-info">
                     <h3 class="product-name">Leggings de sport</h3>
-                    <p class="product-description">leggings de premire qualite extremement confortabke</p>
-                    <p class="product-price">8000f</p>
-                    <a href="product-detail.html" class="btn">Voir</a>
+                    <p class="product-description">Leggings de première qualité, extrêmement confortable</p>
+                    <p class="product-price" data-price="8000">8000f</p>
+                    <button class="btn-add-to-cart" data-id="2">Ajouter au Panier</button>
                 </div>
             </div>
 
-            <!-- Produit 3 -->
-            <div class="product-card">
-                <img src="./image/voile rose .jpg" alt="Sac Urbain" class="product-image">
+            <div class="product-card" data-id="3">
+                <img src="image/voile rose .jpg" alt="Voile rose" class="product-image">
                 <div class="product-info">
-                    <h3 class="product-name">voile rose </h3>
-                    <p class="product-description">voile extremement confortabke </p>
-                    <p class="product-price">5000f</p>
-                    <a href="product-detail.html" class="btn">Voir</a>
+                    <h3 class="product-name">Voile rose</h3>
+                    <p class="product-description">Voile extrêmement confortable</p>
+                    <p class="product-price" data-price="5000">5000f</p>
+                    <button class="btn-add-to-cart" data-id="3">Ajouter au Panier</button>
                 </div>
             </div>
 
-            <!-- Produit 4 -->
-            <div class="product-card">
-                <img src="./image/sand zara home.jpg" alt="Lunettes SunStyle" class="product-image">
+            <div class="product-card" data-id="4">
+                <img src="image/sand zara home.jpg" alt="Sandales Zara" class="product-image">
                 <div class="product-info">
-                    <h3 class="product-name">sandales zara </h3>
-                    <p class="product-description">sandales de haute qualité pointure:38-45</p>
-                    <p class="product-price">10000f</p>
-                    <a href="product-detail.html" class="btn">Voir</a>
+                    <h3 class="product-name">Sandales Zara</h3>
+                    <p class="product-description">Sandales de haute qualité pointure: 38-45</p>
+                    <p class="product-price" data-price="10000">10000f</p>
+                    <button class="btn-add-to-cart" data-id="4">Ajouter au Panier</button>
                 </div>
             </div>
+            
+             <div class="product-card" data-id="5">
+                <img src="image/guipure bleue.jpg" alt="Tissu guipure" class="product-image">
+                <div class="product-info">
+                    <h3 class="product-name">Tissu Guipure</h3>
+                    <p class="product-description">Tissu guipure bleue de haute qualité</p>
+                    <p class="product-price" data-price="35000">35000f</p>
+                    <button class="btn-add-to-cart" data-id="5">Ajouter au Panier</button>
+                </div>
+            </div>
+        </div>
 
-             <!-- Produit 5 -->
-            <div class="product-card">
-                <img src="./image/guipure bleue.jpg" alt="Lunettes SunStyle" class="product-image">
-                <div class="product-info">
-                    <h3 class="product-name">tissu guipure </h3>
-                    <p class="product-description">tissu guipure bleue de haute qualite</p>
-                    <p class="product-price">35000f</p>
-                    <a href="product-detail.html" class="btn">Voir</a>
-                </div>
-            </div>
-        </div>
     </div>
  
     <!-- FOOTER -->
