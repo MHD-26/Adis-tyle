@@ -126,7 +126,7 @@ function setupProductPageListeners() {
             
             // Remonter au conteneur parent pour trouver les infos
             const card = button.closest('.product-card');
-            
+             
             if (card) {
                 const name = card.querySelector('.product-name').textContent;
                 // Récupérer le prix depuis l'attribut data-price
