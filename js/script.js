@@ -1,31 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // 1. Récupérer les éléments par leur ID
-    const menuToggle = document.getElementById('menu-toggle');
-    const mainNav = document.getElementById('main-nav');
-    const body = document.body;
 
-    if (menuToggle && mainNav) {
-        menuToggle.addEventListener('click', () => {
-            // Bascule la classe 'nav-open' sur le body
-            body.classList.toggle('nav-open');
-            
-            // Pour l'accessibilité : change l'état du bouton
-            const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true' || false;
-            menuToggle.setAttribute('aria-expanded', !isExpanded);
-        });
-        
-        // Optionnel: Fermer le menu si l'utilisateur clique sur un lien (sur mobile)
-        const navLinks = mainNav.querySelectorAll('a');
-        navLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                if (window.innerWidth <= 768) {
-                    body.classList.remove('nav-open');
-                    menuToggle.setAttribute('aria-expanded', 'false');
-                }
-            });
-        });
-    }
-});
 // ===============================================
 // 1. LOGIQUE GLOBALE DU PANIER (STOCKAGE)
 // ===============================================
@@ -71,7 +44,6 @@ function addToCart(productId, name, price, imageUrl) {
     }
 
     saveCart(cart);
-    alert(`"${name}" a été ajouté au panier !`);
     // Optionnel : Mettre à jour l'icône du panier si vous en avez une
     // updateCartIconCount(); 
 }
@@ -134,6 +106,21 @@ function setupProductPageListeners() {
                 const imageUrl = card.querySelector('img').src;
 
                 addToCart(productId, name, price, imageUrl);
+                
+                // Modification visuelle du bouton pour confirmer l'ajout
+                const originalText = button.textContent;
+                button.innerHTML = "✓ Produit ajouté avec succès (+)";
+                button.style.backgroundColor = "#28a745"; // Vert Bootstrap
+                button.style.borderColor = "#28a745";
+                button.style.color = "white";
+
+                // Remettre à la normale après 2.5 secondes
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.backgroundColor = ""; // Retour au CSS par défaut
+                    button.style.borderColor = "";
+                    button.style.color = "";
+                }, 2500);
             }
         });
     });
@@ -176,14 +163,14 @@ function displayCart() {
                     <img src="${item.imageUrl}" alt="${item.name}">
                     <div class="article-details">
                         <p class="article-nom">${item.name}</p>
-                        <p class="article-prix" data-prix="${item.price.toFixed(2)}">${item.price.toFixed(2)} €</p>
+                        <p class="article-prix" data-prix="${item.price.toFixed(2)}">${item.price.toFixed(2)} CFA</p>
                     </div>
                     <div class="article-quantite">
                         <button class="quantite-btn" data-id="${item.id}" data-action="decrement">-</button>
                         <input type="number" value="${item.quantity}" min="1" class="quantite-input" data-id="${item.id}" readonly>
                         <button class="quantite-btn" data-id="${item.id}" data-action="increment">+</button>
                     </div>
-                    <div class="article-total">${itemTotal.toFixed(2)} €</div>
+                    <div class="article-total">${itemTotal.toFixed(2)} CFA</div>
                     <button class="article-supprimer" data-id="${item.id}">Supprimer</button>
                 </div>
             `;
@@ -194,16 +181,16 @@ function displayCart() {
     // Calcul et affichage des totaux
     const finalTotal = subtotal + SHIPPING_COST;
 
-    sousTotalSpan.textContent = subtotal.toFixed(2) + ' €';
+    sousTotalSpan.textContent = subtotal.toFixed(2) + ' CFA';
     
     // Mettre à jour le coût de livraison (seulement si le panier n'est pas vide)
     document.getElementById('frais-livraison').textContent = 
-        cart.length > 0 ? SHIPPING_COST.toFixed(2) + ' €' : '0.00 €';
+        cart.length > 0 ? SHIPPING_COST.toFixed(2) + ' CFA' : '0.00 CFA';
     
     // Afficher le total final
-    totalFinalSpan.textContent = (cart.length > 0 ? finalTotal : 0.00).toFixed(2) + ' €';
+    totalFinalSpan.textContent = (cart.length > 0 ? finalTotal : 0.00).toFixed(2) + ' CFA';
 
-    setupCartPageListeners(); // Réattacher les écouteurs après le rendu
+    // REMARQUE: setupCartPageListeners() a été retiré d'ici pour éviter le bug de duplication d'événements
 }
 
 
@@ -248,33 +235,7 @@ function setupCartPageListeners() {
 // ===============================================
 
 document.addEventListener('DOMContentLoaded', () => {
-    // LOGIQUE EXISTANTE DU MENU HAMBURGER (ASSUREZ-VOUS QU'ELLE EST TOUJOURS PRÉSENTE)
-    const menuToggle = document.getElementById('menu-toggle');
-    const mainNav = document.getElementById('main-nav');
-    const body = document.body;
-
-    if (menuToggle) {
-        menuToggle.addEventListener('click', () => {
-            body.classList.toggle('nav-open');
-            menuToggle.setAttribute('aria-expanded', body.classList.contains('nav-open'));
-        });
-
-        // Fermer le menu si on clique sur un lien ou en dehors
-        mainNav.addEventListener('click', (e) => {
-            if (e.target.tagName === 'A') {
-                 body.classList.remove('nav-open');
-                 menuToggle.setAttribute('aria-expanded', 'false');
-            }
-        });
-        document.addEventListener('click', (e) => {
-            if (!mainNav.contains(e.target) && !menuToggle.contains(e.target) && body.classList.contains('nav-open')) {
-                body.classList.remove('nav-open');
-                menuToggle.setAttribute('aria-expanded', 'false');
-            }
-        });
-    }
-    
-    // NOUVELLE LOGIQUE DU PANIER
+    // LOGIQUE DU PANIER
     const isProductPage = document.querySelector('.products-grid');
     const isCartPage = document.getElementById('panier-liste-articles');
 
@@ -284,5 +245,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (isCartPage) {
         displayCart(); // Affiche le contenu du panier au chargement de la page panier
+        setupCartPageListeners(); // On attache l'écouteur UNE SEULE FOIS ici
     }
 });

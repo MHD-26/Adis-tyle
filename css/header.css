@@ -5,19 +5,14 @@
 header {
     background-color: #ffffff; /* Fond blanc */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    padding: 10px 0;
     position: sticky; /* L'en-tête reste en haut au défilement */
     top: 0;
-    z-index: 100;
+    z-index: 1000; /* Doit être au-dessus du reste */
 }
 
 .header-container {
     max-width: 1200px;
     margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
 }
 
 .logo img {
@@ -26,114 +21,17 @@ header {
 }
 
 /* ==================================== */
-/* 2. NAVIGATION (DESKTOP) */
+/* 2. NAVIGATION (STYLES PERSONNALISÉS BOOTSTRAP) */
 /* ==================================== */
 
-.navbar {
-    display: flex;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.navbar li a {
-    text-decoration: none;
-    color: #333;
+.navbar-nav .nav-link {
+    color: #333 !important;
     font-weight: 500;
-    padding: 10px 15px;
-    display: block;
+    padding: 10px 15px !important;
     transition: color 0.3s;
 }
 
-.navbar li a:hover,
-.navbar li a.active {
-    color: #007bff; /* Couleur de votre marque */
-}
-
-/* ==================================== */
-/* 3. BOUTON HAMBURGER (Initialement masqué) */
-/* ==================================== */
-
-.hamburger-menu {
-    display: none; /* Masqué par défaut sur desktop */
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 10px;
-    z-index: 1001;
-}
-
-/* Les trois lignes de l'icône */
-.hamburger-menu .bar {
-    display: block;
-    width: 25px;
-    height: 3px;
-    background-color: #333;
-    margin: 5px 0;
-    border-radius: 2px;
-}
-
-/* ==================================== */
-/* 4. MENU MOBILE (MEDIA QUERY) */
-/* ==================================== */
-
-@media (max-width: 768px) {
-    
-    /* Afficher le bouton hamburger */
-    .hamburger-menu {
-        display: block; 
-    }
-    
-    /* Assurer que le logo et le bouton sont bien alignés */
-    .header-container {
-        justify-content: space-between; 
-        padding: 15px 20px;
-        align-items: center;
-    }
-
-    /* -------------------------------------- */
-    /* GESTION DU MENU DÉPLIANT (#main-nav) */
-    /* -------------------------------------- */
-    
-    #main-nav {
-        /* Position et apparence */
-        position: absolute;
-        top: 100%; /* Démarre juste sous l'en-tête */
-        left: 0;
-        width: 100%;
-        background-color: #f8f8f8; /* Fond légèrement grisé pour le menu mobile */
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        z-index: 999;
-
-        /* ÉTAT MASQUÉ : Clé pour la transition */
-        max-height: 0; /* La hauteur maximale est à zéro */
-        overflow: hidden; /* Cache ce qui dépasse */
-        transition: max-height 0.5s ease-in-out; /* LA TRANSITION DOIT ÊTRE SUR max-height */
-    }
-
-    /* ÉTAT AFFICHÉ : Classe ajoutée par JavaScript sur le <body> */
-    .nav-open #main-nav {
-        /* DÉPLIER : On donne une hauteur maximale largement supérieure au contenu */
-        max-height: 500px; /* Assure le dépliement fluide */
-    }
-
-    /* Stylisation des éléments dans le menu déplié */
-    .navbar {
-        flex-direction: column; /* Les liens s'empilent verticalement */
-        padding: 0;
-        margin: 0;
-    }
-
-    .navbar li {
-        text-align: center;
-        border-bottom: 1px solid #eee;
-    }
-    
-    .navbar li:last-child {
-        border-bottom: none;
-    }
-
-    .navbar li a {
-        padding: 15px 15px;
-    }
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link.active {
+    color: #007bff !important; /* Couleur de votre marque */
 }

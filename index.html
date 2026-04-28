@@ -8,30 +8,31 @@
     <link rel="stylesheet" href="./css/header.css">
     <link rel="stylesheet" href="./css/footer.css">
     <script src="./js/script.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
 </head>
 <body>
     <!-- HEADER -->
     <header>
-        <div class="header-container">
-            <a href="index.html" class="logo">
-                <img src="image/logo-removebg-preview.png" alt="Logo Adis'tyle">
-            </a>
-            
-            <button class="hamburger-menu" aria-label="Ouvrir le menu de navigation" id="menu-toggle">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </button>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color: #ffffff !important; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);">
+            <div class="container-fluid header-container">
+                <a class="navbar-brand logo" href="index.html">
+                    <img src="image/logo-removebg-preview.png" alt="Logo Adis'tyle">
+                </a>
+                
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
-            <nav id="main-nav" aria-label="Menu principal"> 
-                <ul class="navbar">
-                    <li><a href="index.html">Accueil</a></li>
-                    <li><a href="pages/produits.html">Produits</a></li>
-                    <li><a href="pages/panier.html">Panier</a></li>
-                </ul>
-            </nav>
-        </div>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="index.html">Accueil</a></li>
+                        <li class="nav-item"><a class="nav-link" href="pages/produits.html">Produits</a></li>
+                        <li class="nav-item"><a class="nav-link" href="pages/panier.html">Panier</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
     </header>
     <!-- HERO -->
     <div class="hero">
@@ -47,7 +48,7 @@
         <div class="products-grid">
             
             <div class="product-card" data-id="1">
-                <img src="image/alo noir.jpg" alt="Tee-shirt Alo noir" class="product-image">
+                <img src="image/alo-noir.jpg" alt="Tee-shirt Alo noir" class="product-image">
                 <div class="product-info">
                     <h3 class="product-name">Tee-shirt Alo</h3>
                     <p class="product-description">Tee-shirt 100% coton</p>
@@ -57,7 +58,7 @@
             </div>
 
             <div class="product-card" data-id="2">
-                <img src="image/bas rouge.jpg" alt="Leggings rouge" class="product-image">
+                <img src="image/bas-rouge.jpg" alt="Leggings rouge" class="product-image">
                 <div class="product-info">
                     <h3 class="product-name">Leggings de sport</h3>
                     <p class="product-description">Leggings de première qualité, extrêmement confortable</p>
@@ -67,7 +68,7 @@
             </div>
 
             <div class="product-card" data-id="3">
-                <img src="image/voile rose .jpg" alt="Voile rose" class="product-image">
+                <img src="image/voile-rose.jpg" alt="Voile rose" class="product-image">
                 <div class="product-info">
                     <h3 class="product-name">Voile rose</h3>
                     <p class="product-description">Voile extrêmement confortable</p>
@@ -77,7 +78,7 @@
             </div>
 
             <div class="product-card" data-id="4">
-                <img src="image/sand zara home.jpg" alt="Sandales Zara" class="product-image">
+                <img src="image/sand-zara-home.jpg" alt="Sandales Zara" class="product-image">
                 <div class="product-info">
                     <h3 class="product-name">Sandales Zara</h3>
                     <p class="product-description">Sandales de haute qualité pointure: 38-45</p>
@@ -87,7 +88,7 @@
             </div>
             
              <div class="product-card" data-id="5">
-                <img src="image/guipure bleue.jpg" alt="Tissu guipure" class="product-image">
+                <img src="image/guipure-bleue.jpg" alt="Tissu guipure" class="product-image">
                 <div class="product-info">
                     <h3 class="product-name">Tissu Guipure</h3>
                     <p class="product-description">Tissu guipure bleue de haute qualité</p>
@@ -95,8 +96,7 @@
                     <button class="btn-add-to-cart" data-id="5">Ajouter au Panier</button>
                 </div>
             </div>
-        </div>
-
+        </div>
     </div>
  
     <!-- FOOTER -->
@@ -129,6 +129,7 @@
             <p>&copy; 2025 <i>Adis'tyle</i></p>
         </div>
     </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
 

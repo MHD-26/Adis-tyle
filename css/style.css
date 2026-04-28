@@ -23,6 +23,7 @@ a{
     width: 100%;
     background-repeat: no-repeat;
     background-size: cover;
+    background-position: center 15%; /* Garde le centre, mais remonte un peu pour voir la tête */
     height: 640px; 
 }
 .hero h1{
@@ -40,10 +41,12 @@ a{
     background-color: goldenrod;
     color: white;
     border-radius: 5px;
-    border-color: white;
+    border: 1px solid white;
+    cursor: pointer;
     padding: 10px 16px;
     margin-top: 30px;
     align-items: center;
+    transition: all 0.3s ease;
 }
 .btn:hover{
     background-color: white;
@@ -114,20 +117,7 @@ a{
 /* ===================================== */
 /* AJOUTS POUR LA SECTION PRODUITS */
 /* ===================================== */
-
-/* Point de rupture pour les tablettes (passer de 4 à 2 colonnes) */
-@media (max-width: 992px) {
-    .products-grid {
-        grid-template-columns: repeat(2, 1fr); /* Affiche 2 produits par ligne */
-    }
-}
-
-/* Point de rupture pour les téléphones (passer de 2 à 1 colonne) */
-@media (max-width: 576px) {
-    .products-grid {
-        grid-template-columns: 1fr; /* Affiche 1 produit par ligne (colonne unique) */
-    }
-}
+/* Les media queries pour .products-grid ont été retirées car 'auto-fit' gère déjà la responsivité de manière fluide. */
 @media (max-width: 600px) {
     .hero {
         /* Réduire la hauteur sur les petits écrans */
