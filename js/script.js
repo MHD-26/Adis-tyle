@@ -25,7 +25,7 @@ function addToCart(productId, name, price, imageUrl) {
     let cart = getCart();
     // Convertir l'ID en nombre pour les comparaisons futures
     const id = Number(productId);
-    
+
     // Vérifie si le produit existe déjà dans le panier
     const existingItem = cart.find(item => item.id === id);
 
@@ -95,18 +95,18 @@ function setupProductPageListeners() {
     addToCartButtons.forEach(button => {
         button.addEventListener('click', (event) => {
             const productId = button.dataset.id;
-            
+
             // Remonter au conteneur parent pour trouver les infos
             const card = button.closest('.product-card');
-             
+
             if (card) {
                 const name = card.querySelector('.product-name').textContent;
                 // Récupérer le prix depuis l'attribut data-price
-                const price = card.querySelector('.product-price').dataset.price; 
+                const price = card.querySelector('.product-price').dataset.price;
                 const imageUrl = card.querySelector('img').src;
 
                 addToCart(productId, name, price, imageUrl);
-                
+
                 // Modification visuelle du bouton pour confirmer l'ajout
                 const originalText = button.textContent;
                 button.innerHTML = "✓ Produit ajouté avec succès (+)";
@@ -131,7 +131,7 @@ function setupProductPageListeners() {
 // 4. GESTION DE LA PAGE PANIER (Affichage et Calculs)
 // ===============================================
 
-const SHIPPING_COST = 5.00; // Coût fixe de livraison
+const SHIPPING_COST = 2000; // Coût fixe de livraison (Ajusté à 2000 CFA)
 
 // Fonction pour afficher le contenu du panier
 function displayCart() {
@@ -139,15 +139,15 @@ function displayCart() {
     const cartListContainer = document.getElementById('panier-liste-articles');
     const sousTotalSpan = document.getElementById('sous-total');
     const totalFinalSpan = document.getElementById('total-final');
-    
+
     // Vider le contenu précédent
     cartListContainer.innerHTML = '';
-    
+
     let subtotal = 0;
 
     if (cart.length === 0) {
         // Afficher un message si le panier est vide
-        cartListContainer.innerHTML = 
+        cartListContainer.innerHTML =
             `<p class="message-vide" style="text-align: center; padding: 30px;">
                 Votre panier est vide. <a href="produits.html">Commencez vos achats !</a>
             </p>`;
@@ -177,16 +177,16 @@ function displayCart() {
             cartListContainer.innerHTML += cartItemHTML;
         });
     }
-    
+
     // Calcul et affichage des totaux
     const finalTotal = subtotal + SHIPPING_COST;
 
     sousTotalSpan.textContent = subtotal.toFixed(2) + ' CFA';
-    
+
     // Mettre à jour le coût de livraison (seulement si le panier n'est pas vide)
-    document.getElementById('frais-livraison').textContent = 
+    document.getElementById('frais-livraison').textContent =
         cart.length > 0 ? SHIPPING_COST.toFixed(2) + ' CFA' : '0.00 CFA';
-    
+
     // Afficher le total final
     totalFinalSpan.textContent = (cart.length > 0 ? finalTotal : 0.00).toFixed(2) + ' CFA';
 
@@ -197,13 +197,13 @@ function displayCart() {
 // Écoute les événements (changement de quantité, suppression) sur la page panier
 function setupCartPageListeners() {
     const cartContainer = document.getElementById('panier-liste-articles');
-    
+
     if (!cartContainer) return; // Quitter si on n'est pas sur la page panier
 
     cartContainer.addEventListener('click', (event) => {
         const target = event.target;
         const productId = target.dataset.id;
-        
+
         if (!productId) return;
 
         // 1. Bouton Supprimer
@@ -222,7 +222,7 @@ function setupCartPageListeners() {
             } else if (action === 'decrement') {
                 currentQuantity -= 1;
             }
-            
+
             // Mettre à jour la quantité (le 'updateItemQuantity' gère la suppression si la quantité arrive à zéro)
             updateItemQuantity(productId, currentQuantity);
         }
@@ -231,7 +231,107 @@ function setupCartPageListeners() {
 
 
 // ===============================================
-// 5. INITIALISATION (Exécuté au chargement de la page)
+// 5. GESTION DU CHECKOUT (WHATSAPP)
+// ===============================================
+
+function setupCheckoutListener() {
+    const checkoutForm = document.getElementById('checkoutForm');
+    const paymentSelect = document.getElementById('clientPayment');
+    const transactionField = document.getElementById('transactionField');
+    const transactionCodeInput = document.getElementById('transactionCode');
+    const paymentInstructions = document.getElementById('paymentInstructions');
+
+    if (!checkoutForm) return;
+
+    if (paymentSelect) {
+        paymentSelect.addEventListener('change', function() {
+            if (this.value === 'Wave' || this.value === 'Orange Money') {
+                transactionField.classList.remove('d-none');
+                transactionCodeInput.setAttribute('required', 'required');
+                
+                // Calculer le total pour l'afficher dans les instructions
+                const cart = getCart();
+                let subtotal = 0;
+                cart.forEach(item => subtotal += item.price * item.quantity);
+                const finalTotal = subtotal + SHIPPING_COST;
+                
+                paymentInstructions.innerHTML = `Veuillez transférer <strong>${finalTotal} CFA</strong> au numéro <strong>77 551 20 17</strong> via ${this.value}, puis entrez le code de transaction ci-dessous.`;
+            } else {
+                transactionField.classList.add('d-none');
+                transactionCodeInput.removeAttribute('required');
+                transactionCodeInput.value = '';
+            }
+        });
+    }
+
+    checkoutForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const cart = getCart();
+        if (cart.length === 0) {
+            alert("Votre panier est vide !");
+            return;
+        }
+
+        const name = document.getElementById('clientName').value;
+        const phone = document.getElementById('clientPhone').value;
+        const address = document.getElementById('clientAddress').value;
+        const expectedDate = document.getElementById('clientDate').value; 
+        const payment = document.getElementById('clientPayment').value;
+        const transactionCode = document.getElementById('transactionCode').value;
+
+        let subtotal = 0;
+        let orderDetails = "";
+
+        cart.forEach(item => {
+            const itemTotal = item.price * item.quantity;
+            subtotal += itemTotal;
+            orderDetails += `- ${item.quantity}x ${item.name} (${item.price.toFixed(2)} CFA)\n`;
+        });
+
+        const finalTotal = subtotal + SHIPPING_COST;
+
+        let transactionText = "";
+        if (payment === 'Wave' || payment === 'Orange Money') {
+            transactionText = `\nCode de transaction : ${transactionCode}`;
+        }
+
+        const storePhone = "221775512017";
+        
+        const message = `Bonjour Adis'tyle, je souhaite valider ma commande :
+
+🛒 PANIER :
+${orderDetails}
+Livraison : ${SHIPPING_COST.toFixed(2)} CFA
+💰 TOTAL : ${finalTotal.toFixed(2)} CFA
+
+👤 INFOS CLIENT :
+Nom : ${name}
+Téléphone : ${phone}
+Adresse exacte : ${address}
+Date de livraison attendue : ${expectedDate}
+Paiement choisi : ${payment}${transactionText}`;
+
+        const encodedMessage = encodeURIComponent(message);
+        const whatsappUrl = `https://wa.me/${storePhone}?text=${encodedMessage}`;
+
+        // Fermer le modal de checkout
+        const checkoutModalEl = document.getElementById('checkoutModal');
+        const checkoutModal = bootstrap.Modal.getInstance(checkoutModalEl) || new bootstrap.Modal(checkoutModalEl);
+        checkoutModal.hide();
+
+        // Vider le panier
+        localStorage.removeItem('adis_cart');
+        displayCart();
+
+        // Ouvrir WhatsApp directement (ce qui envoie le message récapitulatif sur votre WhatsApp)
+        window.open(whatsappUrl, '_blank');
+    });
+}
+
+
+// ===============================================
+// 6. INITIALISATION (Exécuté au chargement de la page)
 // ===============================================
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -246,5 +346,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (isCartPage) {
         displayCart(); // Affiche le contenu du panier au chargement de la page panier
         setupCartPageListeners(); // On attache l'écouteur UNE SEULE FOIS ici
+        setupCheckoutListener(); // Initialiser la logique WhatsApp
     }
 });
