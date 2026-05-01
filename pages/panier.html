@@ -104,8 +104,43 @@
                 <input type="tel" class="form-control" id="clientPhone" required>
               </div>
               <div class="mb-3">
-                <label for="clientAddress" class="form-label">Adresse exacte de livraison</label>
-                <textarea class="form-control" id="clientAddress" rows="2" required></textarea>
+                <label for="clientAddress" class="form-label">Commune (Dakar)</label>
+                <input class="form-control" list="dakarCommunes" id="clientAddress" placeholder="Tapez pour rechercher votre commune..." required>
+                <datalist id="dakarCommunes">
+                    <option value="Dakar Plateau"></option>
+                    <option value="Médina"></option>
+                    <option value="Fass - Colobane - Gueule Tapée"></option>
+                    <option value="Fann - Point E - Amitié"></option>
+                    <option value="Gorée"></option>
+                    <option value="Grand Dakar"></option>
+                    <option value="Biscuiterie"></option>
+                    <option value="Dieuppeul - Derklé"></option>
+                    <option value="Sicap Liberté"></option>
+                    <option value="Hann Bel-Air"></option>
+                    <option value="HLM"></option>
+                    <option value="Grand Yoff"></option>
+                    <option value="Patte d'Oie"></option>
+                    <option value="Parcelles Assainies"></option>
+                    <option value="Cambérène"></option>
+                    <option value="Yoff"></option>
+                    <option value="Ngor"></option>
+                    <option value="Ouakam"></option>
+                    <option value="Mermoz - Sacré-Cœur"></option>
+                    <option value="Pikine"></option>
+                    <option value="Guédiawaye"></option>
+                    <option value="Rufisque"></option>
+                    <option value="Keur Massar"></option>
+                    <option value="Diamniadio"></option>
+                    <option value="Sébikotane"></option>
+                    <option value="Bargny"></option>
+                    <option value="Sangalkam"></option>
+                    <option value="Bambilor"></option>
+                    <option value="Tivaouane Peulh"></option>
+                </datalist>
+              </div>
+              <div class="mb-3">
+                <label for="clientStreet" class="form-label">Précisions (Quartier, Rue, Villa)</label>
+                <input type="text" class="form-control" id="clientStreet" placeholder="Ex: Cité Alioune Sow, Villa N°12" required>
               </div>
               <div class="mb-3">
                 <label for="clientDate" class="form-label">Date attendue pour la livraison</label>

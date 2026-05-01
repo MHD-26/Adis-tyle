@@ -276,6 +276,7 @@ function setupCheckoutListener() {
         const name = document.getElementById('clientName').value;
         const phone = document.getElementById('clientPhone').value;
         const address = document.getElementById('clientAddress').value;
+        const street = document.getElementById('clientStreet').value; // NOUVEAU
         const expectedDate = document.getElementById('clientDate').value; 
         const payment = document.getElementById('clientPayment').value;
         const transactionCode = document.getElementById('transactionCode').value;
@@ -308,7 +309,7 @@ Livraison : ${SHIPPING_COST.toFixed(2)} CFA
 👤 INFOS CLIENT :
 Nom : ${name}
 Téléphone : ${phone}
-Adresse exacte : ${address}
+Adresse exacte : ${address} - ${street}
 Date de livraison attendue : ${expectedDate}
 Paiement choisi : ${payment}${transactionText}`;
 
