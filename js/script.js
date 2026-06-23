@@ -131,7 +131,53 @@ function setupProductPageListeners() {
 // 4. GESTION DE LA PAGE PANIER (Affichage et Calculs)
 // ===============================================
 
-const SHIPPING_COST = 2000; // Coût fixe de livraison (Ajusté à 2000 CFA)
+// Dictionnaire des coûts de livraison estimés (Tarif Yango depuis Ouakam)
+const COMMUNE_SHIPPING_ESTIMATES = {
+    "Ouakam": 1000,
+    "Ngor": 1200,
+    "Mermoz - Sacré-Cœur": 1200,
+    "Fann - Point E - Amitié": 1500,
+    "Yoff": 1500,
+    "Médina": 1800,
+    "Fass - Colobane - Gueule Tapée": 1800,
+    "Dakar Plateau": 2000,
+    "Grand Yoff": 2000,
+    "Sicap Liberté": 2000,
+    "Dieuppeul - Derklé": 2000,
+    "Grand Dakar": 2000,
+    "Biscuiterie": 2000,
+    "HLM": 2200,
+    "Hann Bel-Air": 2200,
+    "Patte d'Oie": 2200,
+    "Parcelles Assainies": 2200,
+    "Cambérène": 2200,
+    "Pikine": 2800,
+    "Guédiawaye": 3000,
+    "Rufisque": 4000,
+    "Keur Massar": 4000,
+    "Bargny": 4500,
+    "Sangalkam": 4500,
+    "Tivaouane Peulh": 4500,
+    "Bambilor": 5000,
+    "Diamniadio": 5000,
+    "Sébikotane": 5000,
+    "Gorée": 3000
+};
+
+// Variable globale pour suivre le coût de livraison actuel
+let currentShippingCost = null;
+
+// Fonction pour obtenir le coût de livraison basé sur la commune
+function getShippingCost(communeName) {
+    if (!communeName) return null;
+    const cleanCommune = communeName.trim().toLowerCase();
+    for (const key in COMMUNE_SHIPPING_ESTIMATES) {
+        if (key.toLowerCase() === cleanCommune) {
+            return COMMUNE_SHIPPING_ESTIMATES[key];
+        }
+    }
+    return null;
+}
 
 // Fonction pour afficher le contenu du panier
 function displayCart() {
@@ -139,25 +185,34 @@ function displayCart() {
     const cartListContainer = document.getElementById('panier-liste-articles');
     const sousTotalSpan = document.getElementById('sous-total');
     const totalFinalSpan = document.getElementById('total-final');
+    const fraisLivraisonSpan = document.getElementById('frais-livraison');
 
     // Vider le contenu précédent
-    cartListContainer.innerHTML = '';
+    if (cartListContainer) cartListContainer.innerHTML = '';
 
     let subtotal = 0;
 
     if (cart.length === 0) {
         // Afficher un message si le panier est vide
-        cartListContainer.innerHTML =
-            `<p class="message-vide" style="text-align: center; padding: 30px;">
-                Votre panier est vide. <a href="produits.html">Commencez vos achats !</a>
-            </p>`;
-    } else {
-        // Boucler sur chaque article dans le panier
-        cart.forEach(item => {
-            const itemTotal = item.price * item.quantity;
-            subtotal += itemTotal;
+        if (cartListContainer) {
+            cartListContainer.innerHTML =
+                `<p class="message-vide" style="text-align: center; padding: 30px;">
+                    Votre panier est vide. <a href="produits.html">Commencez vos achats !</a>
+                </p>`;
+        }
+        if (sousTotalSpan) sousTotalSpan.textContent = '0.00 CFA';
+        if (fraisLivraisonSpan) fraisLivraisonSpan.textContent = '0.00 CFA';
+        if (totalFinalSpan) totalFinalSpan.textContent = '0.00 CFA';
+        return;
+    }
 
-            // Création de l'élément HTML pour l'article
+    // Boucler sur chaque article dans le panier
+    cart.forEach(item => {
+        const itemTotal = item.price * item.quantity;
+        subtotal += itemTotal;
+
+        // Création de l'élément HTML pour l'article
+        if (cartListContainer) {
             const cartItemHTML = `
                 <div class="panier-article" data-id="${item.id}">
                     <img src="${item.imageUrl}" alt="${item.name}">
@@ -175,22 +230,25 @@ function displayCart() {
                 </div>
             `;
             cartListContainer.innerHTML += cartItemHTML;
-        });
+        }
+    });
+
+    if (sousTotalSpan) sousTotalSpan.textContent = subtotal.toFixed(2) + ' CFA';
+
+    // Mettre à jour le coût de livraison et le total final
+    if (fraisLivraisonSpan) {
+        if (currentShippingCost !== null) {
+            fraisLivraisonSpan.textContent = currentShippingCost.toFixed(2) + ' CFA';
+            if (totalFinalSpan) {
+                totalFinalSpan.textContent = (subtotal + currentShippingCost).toFixed(2) + ' CFA';
+            }
+        } else {
+            fraisLivraisonSpan.textContent = 'À définir';
+            if (totalFinalSpan) {
+                totalFinalSpan.textContent = subtotal.toFixed(2) + ' CFA + livraison';
+            }
+        }
     }
-
-    // Calcul et affichage des totaux
-    const finalTotal = subtotal + SHIPPING_COST;
-
-    sousTotalSpan.textContent = subtotal.toFixed(2) + ' CFA';
-
-    // Mettre à jour le coût de livraison (seulement si le panier n'est pas vide)
-    document.getElementById('frais-livraison').textContent =
-        cart.length > 0 ? SHIPPING_COST.toFixed(2) + ' CFA' : '0.00 CFA';
-
-    // Afficher le total final
-    totalFinalSpan.textContent = (cart.length > 0 ? finalTotal : 0.00).toFixed(2) + ' CFA';
-
-    // REMARQUE: setupCartPageListeners() a été retiré d'ici pour éviter le bug de duplication d'événements
 }
 
 
@@ -233,29 +291,76 @@ function setupCartPageListeners() {
 // ===============================================
 // 5. GESTION DU CHECKOUT (WHATSAPP)
 // ===============================================
-
 function setupCheckoutListener() {
     const checkoutForm = document.getElementById('checkoutForm');
     const paymentSelect = document.getElementById('clientPayment');
     const transactionField = document.getElementById('transactionField');
     const transactionCodeInput = document.getElementById('transactionCode');
     const paymentInstructions = document.getElementById('paymentInstructions');
+    const clientAddressInput = document.getElementById('clientAddress');
+    const shippingEstimateNote = document.getElementById('shipping-estimate-note');
 
     if (!checkoutForm) return;
+
+    function updatePaymentInstructions() {
+        if (!paymentSelect || !paymentInstructions) return;
+        const method = paymentSelect.value;
+        if (method === 'Wave' || method === 'Orange Money') {
+            const cart = getCart();
+            let subtotal = 0;
+            cart.forEach(item => subtotal += item.price * item.quantity);
+            
+            if (currentShippingCost !== null) {
+                const finalTotal = subtotal + currentShippingCost;
+                paymentInstructions.innerHTML = `Veuillez transférer <strong>${finalTotal} CFA</strong> (produits : ${subtotal} CFA + livraison : ${currentShippingCost} CFA) au numéro <strong>77 551 20 17</strong> via ${method}. <br><span class="text-danger" style="font-size: 0.8rem; display: block; margin-top: 5px;">Note : Le coût Yango réel sera vérifié depuis Ouakam. S'il y a une différence importante, elle sera réglée avec le livreur.</span>`;
+            } else {
+                paymentInstructions.innerHTML = `Veuillez transférer <strong>${subtotal} CFA</strong> (coût des produits uniquement) au numéro <strong>77 551 20 17</strong> via ${method}. <br><span class="text-danger" style="font-size: 0.8rem; display: block; margin-top: 5px;">La livraison Yango sera calculée depuis Ouakam après validation et sera à régler directement au livreur.</span>`;
+            }
+        }
+    }
+
+    function updateTotalsWithAddress() {
+        if (!clientAddressInput) return;
+        const addressVal = clientAddressInput.value;
+        const cost = getShippingCost(addressVal);
+        
+        if (cost !== null) {
+            currentShippingCost = cost;
+            if (shippingEstimateNote) {
+                shippingEstimateNote.textContent = `Tarif Yango estimé depuis Ouakam : ${cost} CFA.`;
+                shippingEstimateNote.className = "form-text text-success fw-bold";
+            }
+        } else {
+            currentShippingCost = null;
+            if (shippingEstimateNote) {
+                if (addressVal.trim() !== "") {
+                    shippingEstimateNote.textContent = "Commune personnalisée. Le tarif réel sera calculé via Yango depuis Ouakam.";
+                    shippingEstimateNote.className = "form-text text-warning fw-bold";
+                } else {
+                    shippingEstimateNote.textContent = "La livraison est calculée depuis Ouakam. Saisissez votre commune pour voir une estimation.";
+                    shippingEstimateNote.className = "form-text text-muted";
+                }
+            }
+        }
+        
+        // Recalculer les totaux de la page panier
+        displayCart();
+        
+        // Mettre à jour les instructions de paiement
+        updatePaymentInstructions();
+    }
+
+    if (clientAddressInput) {
+        clientAddressInput.addEventListener('input', updateTotalsWithAddress);
+        clientAddressInput.addEventListener('change', updateTotalsWithAddress);
+    }
 
     if (paymentSelect) {
         paymentSelect.addEventListener('change', function() {
             if (this.value === 'Wave' || this.value === 'Orange Money') {
                 transactionField.classList.remove('d-none');
                 transactionCodeInput.setAttribute('required', 'required');
-                
-                // Calculer le total pour l'afficher dans les instructions
-                const cart = getCart();
-                let subtotal = 0;
-                cart.forEach(item => subtotal += item.price * item.quantity);
-                const finalTotal = subtotal + SHIPPING_COST;
-                
-                paymentInstructions.innerHTML = `Veuillez transférer <strong>${finalTotal} CFA</strong> au numéro <strong>77 551 20 17</strong> via ${this.value}, puis entrez le code de transaction ci-dessous.`;
+                updatePaymentInstructions();
             } else {
                 transactionField.classList.add('d-none');
                 transactionCodeInput.removeAttribute('required');
@@ -276,7 +381,7 @@ function setupCheckoutListener() {
         const name = document.getElementById('clientName').value;
         const phone = document.getElementById('clientPhone').value;
         const address = document.getElementById('clientAddress').value;
-        const street = document.getElementById('clientStreet').value; // NOUVEAU
+        const street = document.getElementById('clientStreet').value;
         const expectedDate = document.getElementById('clientDate').value; 
         const payment = document.getElementById('clientPayment').value;
         const transactionCode = document.getElementById('transactionCode').value;
@@ -290,12 +395,16 @@ function setupCheckoutListener() {
             orderDetails += `- ${item.quantity}x ${item.name} (${item.price.toFixed(2)} CFA)\n`;
         });
 
-        const finalTotal = subtotal + SHIPPING_COST;
+        const shippingText = currentShippingCost !== null ? `${currentShippingCost.toFixed(2)} CFA (estimation Yango)` : "À calculer sur Yango (tarif réel depuis Ouakam)";
+        const finalTotalText = currentShippingCost !== null ? `${(subtotal + currentShippingCost).toFixed(2)} CFA` : `${subtotal.toFixed(2)} CFA + livraison Yango`;
 
         let transactionText = "";
         if (payment === 'Wave' || payment === 'Orange Money') {
             transactionText = `\nCode de transaction : ${transactionCode}`;
         }
+
+        // Créer l'itinéraire Google Maps de Ouakam à l'adresse du client pour simplifier la vie au marchand
+        const itineraryUrl = `https://www.google.com/maps/dir/Ouakam,+Dakar/${encodeURIComponent(address + ', ' + street + ', Dakar, Senegal')}`;
 
         const storePhone = "221775512017";
         
@@ -303,13 +412,14 @@ function setupCheckoutListener() {
 
 🛒 PANIER :
 ${orderDetails}
-Livraison : ${SHIPPING_COST.toFixed(2)} CFA
-💰 TOTAL : ${finalTotal.toFixed(2)} CFA
+Livraison depuis Ouakam : ${shippingText}
+💰 TOTAL : ${finalTotalText}
 
 👤 INFOS CLIENT :
 Nom : ${name}
 Téléphone : ${phone}
-Adresse exacte : ${address} - ${street}
+Adresse de livraison : ${address} - ${street}
+🗺️ Itinéraire Google Maps : ${itineraryUrl}
 Date de livraison attendue : ${expectedDate}
 Paiement choisi : ${payment}${transactionText}`;
 

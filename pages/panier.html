@@ -71,16 +71,19 @@
                     <span id="sous-total">0,00 CFA</span>
                 </div>
                 <div class="recap-ligne">
-                    <span>Livraison :</span>
-                    <span id="frais-livraison">2000,00 CFA</span>
+                    <span>Livraison (Tarif Yango depuis Ouakam) :</span>
+                    <span id="frais-livraison">À définir</span>
                 </div>
                 <hr>
                 <div class="recap-ligne total">
                     <span>Total à payer :</span>
-                    <span id="total-final">2000,00 CFA</span>
+                    <span id="total-final">0,00 CFA</span>
                 </div>
 
                 <button class="btn-checkout" data-bs-toggle="modal" data-bs-target="#checkoutModal">Passer à la commande</button>
+                <p class="text-muted small mt-2" style="font-size: 0.8rem; line-height: 1.2; margin-top: 10px;">
+                    * Les frais de livraison sont calculés selon le barème Yango depuis notre boutique à Ouakam et varient selon votre adresse exacte.
+                </p>
             </div>
         </section>
     </main>
@@ -106,6 +109,7 @@
               <div class="mb-3">
                 <label for="clientAddress" class="form-label">Commune (Dakar)</label>
                 <input class="form-control" list="dakarCommunes" id="clientAddress" placeholder="Tapez pour rechercher votre commune..." required>
+                <div class="form-text text-muted" id="shipping-estimate-note" style="font-size: 0.85rem; margin-top: 5px;">La livraison est calculée depuis Ouakam. Saisissez votre commune pour voir une estimation.</div>
                 <datalist id="dakarCommunes">
                     <option value="Dakar Plateau"></option>
                     <option value="Médina"></option>
