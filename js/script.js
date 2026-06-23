@@ -44,8 +44,7 @@ function addToCart(productId, name, price, imageUrl) {
     }
 
     saveCart(cart);
-    // Optionnel : Mettre à jour l'icône du panier si vous en avez une
-    // updateCartIconCount(); 
+    updateCartIconCount(); 
 }
 
 // Supprime complètement un article du panier
@@ -58,6 +57,7 @@ function removeItemFromCart(productId) {
 
     saveCart(cart);
     displayCart(); // Re-afficher le panier après suppression
+    updateCartIconCount();
 }
 
 // Met à jour la quantité d'un article
@@ -80,6 +80,7 @@ function updateItemQuantity(productId, newQuantity) {
 
     saveCart(cart);
     displayCart(); // Re-afficher pour mettre à jour les totaux
+    updateCartIconCount();
 }
 
 
@@ -442,10 +443,113 @@ Paiement choisi : ${payment}${transactionText}`;
 
 
 // ===============================================
+// 5.5 INTEGRATION DU PANIER FLOTTANT ET DU BADGE
+// ===============================================
+
+// Déterminer le chemin relatif correct vers la page panier
+function getCartPagePath() {
+    const pathname = window.location.pathname;
+    // Si nous sommes dans le dossier pages/
+    if (pathname.includes('/pages/')) {
+        return './panier.html';
+    } else {
+        return 'pages/panier.html';
+    }
+}
+
+// Injecter dynamiquement la structure du bouton de panier flottant
+function createFloatingCart() {
+    // Si nous sommes déjà sur la page panier, pas besoin de panier flottant
+    if (document.getElementById('panier-liste-articles')) {
+        return;
+    }
+
+    // Vérifier s'il n'existe pas déjà
+    if (document.getElementById('floating-cart-btn')) {
+        return;
+    }
+
+    const floatingCartHtml = `
+        <a href="${getCartPagePath()}" id="floating-cart-btn" class="floating-cart-container d-none" title="Voir mon panier">
+            <div class="floating-cart-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="9" cy="21" r="1"></circle>
+                    <circle cx="20" cy="21" r="1"></circle>
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                </svg>
+            </div>
+            <span class="floating-cart-badge" id="floating-cart-count">0</span>
+        </a>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', floatingCartHtml);
+}
+
+// Injecter dynamiquement le badge rouge dans la navigation
+function createHeaderCartBadge() {
+    const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+    navLinks.forEach(link => {
+        if (link.textContent.trim().toLowerCase().startsWith('panier')) {
+            // Vérifier si le badge n'existe pas déjà
+            let badge = link.querySelector('#cart-badge-count');
+            if (!badge) {
+                // Remplacer le contenu texte par le badge inséré
+                link.innerHTML = `Panier <span class="badge bg-danger rounded-pill d-none" id="cart-badge-count">0</span>`;
+            }
+        }
+    });
+}
+
+// Mettre à jour les compteurs du panier en temps réel
+function updateCartIconCount() {
+    const cart = getCart();
+    const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+    // 1. Mettre à jour le badge du menu de navigation
+    const cartBadge = document.getElementById('cart-badge-count');
+    if (cartBadge) {
+        cartBadge.textContent = totalCount;
+        if (totalCount > 0) {
+            cartBadge.classList.remove('d-none');
+        } else {
+            cartBadge.classList.add('d-none');
+        }
+    }
+
+    // 2. Mettre à jour le bouton de panier flottant
+    const floatingCartBtn = document.getElementById('floating-cart-btn');
+    const floatingCartCount = document.getElementById('floating-cart-count');
+    
+    if (floatingCartCount) {
+        floatingCartCount.textContent = totalCount;
+    }
+    
+    if (floatingCartBtn) {
+        if (totalCount > 0) {
+            floatingCartBtn.classList.remove('d-none');
+            
+            // Effet d'animation de rebond sur ajout d'un article
+            floatingCartBtn.classList.add('cart-animate');
+            setTimeout(() => {
+                floatingCartBtn.classList.remove('cart-animate');
+            }, 500);
+        } else {
+            floatingCartBtn.classList.add('d-none');
+        }
+    }
+}
+
+
+// ===============================================
 // 6. INITIALISATION (Exécuté au chargement de la page)
 // ===============================================
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Injecter les composants de panier dynamique
+    createFloatingCart();
+    createHeaderCartBadge();
+    updateCartIconCount();
+
     // LOGIQUE DU PANIER
     const isProductPage = document.querySelector('.products-grid');
     const isCartPage = document.getElementById('panier-liste-articles');
