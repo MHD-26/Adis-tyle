@@ -3,7 +3,7 @@
     margin: 0;
 }
 body{
-    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     line-height: 1.5;
     background-color: white;
 }
@@ -86,8 +86,9 @@ a{
     font-size: 24px;
 }
 .product-image{
-    height: 400px;
-    
+    height: 350px;
+    object-fit: cover;
+    width: 100%;
 }
 
 /* ===================================== */
@@ -214,4 +215,34 @@ a{
     padding: 0.25em 0.5em;
     vertical-align: middle;
     margin-left: 5px;
+}
+
+/* ======================================================= */
+/* 6. FILTRES DE CATEGORIES                                */
+/* ======================================================= */
+.category-filters {
+    margin-top: 15px;
+    margin-bottom: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.category-filters .btn-outline-warning {
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 8px 20px;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.category-filters .btn-outline-warning:hover,
+.category-filters .btn-outline-warning.active {
+    background-color: goldenrod !important;
+    border-color: goldenrod !important;
+    color: white !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(218, 165, 32, 0.3);
 }

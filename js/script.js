@@ -127,6 +127,57 @@ function setupProductPageListeners() {
     });
 }
 
+// Fonction pour initialiser et gérer les filtres par catégorie
+function setupCategoryFilters() {
+    const filterButtons = document.querySelectorAll('.category-filters button');
+    const productCards = document.querySelectorAll('.product-card');
+
+    if (filterButtons.length === 0 || productCards.length === 0) return;
+
+    // 1. Assigner des catégories aux cartes produits selon l'ID
+    productCards.forEach(card => {
+        const id = parseInt(card.dataset.id);
+        let category = 'autre';
+
+        if (id >= 1 && id <= 7) category = 'tshirt';
+        else if (id >= 8 && id <= 11) category = 'legging';
+        else if (id >= 12 && id <= 18) category = 'guipure';
+        else if (id >= 19 && id <= 24) category = 'casquette';
+        else if (id >= 25 && id <= 27) category = 'voile';
+        else if (id >= 28 && id <= 29) category = 'sandale';
+
+        card.setAttribute('data-category', category);
+    });
+
+    // 2. Gérer le clic sur les boutons de filtrage
+    filterButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            // Retirer la classe 'active' de tous les boutons
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            // Ajouter la classe 'active' au bouton cliqué
+            button.classList.add('active');
+
+            const filterValue = button.dataset.filter;
+
+            // Filtrer les cartes produits
+            productCards.forEach(card => {
+                const cardCategory = card.getAttribute('data-category');
+                if (filterValue === 'all' || cardCategory === filterValue) {
+                    card.style.display = 'block';
+                    // Animation d'apparition douce
+                    card.style.opacity = '0';
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transition = 'opacity 0.4s ease';
+                    }, 50);
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    });
+}
+
 
 // ===============================================
 // 4. GESTION DE LA PAGE PANIER (Affichage et Calculs)
@@ -219,14 +270,14 @@ function displayCart() {
                     <img src="${item.imageUrl}" alt="${item.name}">
                     <div class="article-details">
                         <p class="article-nom">${item.name}</p>
-                        <p class="article-prix" data-prix="${item.price.toFixed(2)}">${item.price.toFixed(2)} CFA</p>
+                        <p class="article-prix" data-prix="${item.price.toFixed(0)}">${item.price.toFixed(0)} CFA</p>
                     </div>
                     <div class="article-quantite">
                         <button class="quantite-btn" data-id="${item.id}" data-action="decrement">-</button>
                         <input type="number" value="${item.quantity}" min="1" class="quantite-input" data-id="${item.id}" readonly>
                         <button class="quantite-btn" data-id="${item.id}" data-action="increment">+</button>
                     </div>
-                    <div class="article-total">${itemTotal.toFixed(2)} CFA</div>
+                    <div class="article-total">${itemTotal.toFixed(0)} CFA</div>
                     <button class="article-supprimer" data-id="${item.id}">Supprimer</button>
                 </div>
             `;
@@ -234,19 +285,19 @@ function displayCart() {
         }
     });
 
-    if (sousTotalSpan) sousTotalSpan.textContent = subtotal.toFixed(2) + ' CFA';
+    if (sousTotalSpan) sousTotalSpan.textContent = subtotal.toFixed(0) + ' CFA';
 
     // Mettre à jour le coût de livraison et le total final
     if (fraisLivraisonSpan) {
         if (currentShippingCost !== null) {
-            fraisLivraisonSpan.textContent = currentShippingCost.toFixed(2) + ' CFA';
+            fraisLivraisonSpan.textContent = currentShippingCost.toFixed(0) + ' CFA';
             if (totalFinalSpan) {
-                totalFinalSpan.textContent = (subtotal + currentShippingCost).toFixed(2) + ' CFA';
+                totalFinalSpan.textContent = (subtotal + currentShippingCost).toFixed(0) + ' CFA';
             }
         } else {
             fraisLivraisonSpan.textContent = 'À définir';
             if (totalFinalSpan) {
-                totalFinalSpan.textContent = subtotal.toFixed(2) + ' CFA + livraison';
+                totalFinalSpan.textContent = subtotal.toFixed(0) + ' CFA + livraison';
             }
         }
     }
@@ -393,11 +444,11 @@ function setupCheckoutListener() {
         cart.forEach(item => {
             const itemTotal = item.price * item.quantity;
             subtotal += itemTotal;
-            orderDetails += `- ${item.quantity}x ${item.name} (${item.price.toFixed(2)} CFA)\n`;
+            orderDetails += `- ${item.quantity}x ${item.name} (${item.price.toFixed(0)} CFA)\n`;
         });
 
-        const shippingText = currentShippingCost !== null ? `${currentShippingCost.toFixed(2)} CFA (estimation Yango)` : "À calculer sur Yango (tarif réel depuis Ouakam)";
-        const finalTotalText = currentShippingCost !== null ? `${(subtotal + currentShippingCost).toFixed(2)} CFA` : `${subtotal.toFixed(2)} CFA + livraison Yango`;
+        const shippingText = currentShippingCost !== null ? `${currentShippingCost.toFixed(0)} CFA (estimation Yango)` : "À calculer sur Yango (tarif réel depuis Ouakam)";
+        const finalTotalText = currentShippingCost !== null ? `${(subtotal + currentShippingCost).toFixed(0)} CFA` : `${subtotal.toFixed(0)} CFA + livraison Yango`;
 
         let transactionText = "";
         if (payment === 'Wave' || payment === 'Orange Money') {
@@ -427,17 +478,45 @@ Paiement choisi : ${payment}${transactionText}`;
         const encodedMessage = encodeURIComponent(message);
         const whatsappUrl = `https://wa.me/${storePhone}?text=${encodedMessage}`;
 
-        // Fermer le modal de checkout
-        const checkoutModalEl = document.getElementById('checkoutModal');
-        const checkoutModal = bootstrap.Modal.getInstance(checkoutModalEl) || new bootstrap.Modal(checkoutModalEl);
-        checkoutModal.hide();
+        // Configurer le bouton manuel du modal de succès
+        const manualBtn = document.getElementById('manual-whatsapp-btn');
+        if (manualBtn) {
+            manualBtn.href = whatsappUrl;
+        }
 
-        // Vider le panier
-        localStorage.removeItem('adis_cart');
-        displayCart();
+        // Afficher le modal de succès
+        const successModalEl = document.getElementById('successModal');
+        if (successModalEl) {
+            // Fermer le modal de checkout
+            const checkoutModalEl = document.getElementById('checkoutModal');
+            if (checkoutModalEl) {
+                const checkoutModal = bootstrap.Modal.getInstance(checkoutModalEl) || new bootstrap.Modal(checkoutModalEl);
+                checkoutModal.hide();
+            }
 
-        // Ouvrir WhatsApp directement (ce qui envoie le message récapitulatif sur votre WhatsApp)
-        window.open(whatsappUrl, '_blank');
+            // Ouvrir le modal de succès
+            const successModal = new bootstrap.Modal(successModalEl);
+            successModal.show();
+
+            // Vider le panier
+            localStorage.removeItem('adis_cart');
+            displayCart();
+
+            // Redirection automatique vers WhatsApp après 3 secondes
+            setTimeout(() => {
+                window.open(whatsappUrl, '_blank');
+            }, 3000);
+        } else {
+            // Repli si le modal de succès n'existe pas
+            const checkoutModalEl = document.getElementById('checkoutModal');
+            if (checkoutModalEl) {
+                const checkoutModal = bootstrap.Modal.getInstance(checkoutModalEl) || new bootstrap.Modal(checkoutModalEl);
+                checkoutModal.hide();
+            }
+            localStorage.removeItem('adis_cart');
+            displayCart();
+            window.open(whatsappUrl, '_blank');
+        }
     });
 }
 
@@ -556,6 +635,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (isProductPage) {
         setupProductPageListeners();
+        setupCategoryFilters();
     }
 
     if (isCartPage) {

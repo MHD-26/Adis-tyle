@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="./css/header.css">
     <link rel="stylesheet" href="./css/footer.css">
-    <script src="./js/script.js"></script>
+    <script src="./js/script.js" defer></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
 </head>
@@ -38,7 +38,9 @@
     <div class="hero">
         <h1><i>Bienvenue chez Adis'tyle</i></h1>
         <p>Découvrez nos produits de qualité</p>
-        <center><a href="./pages/produits.html" class="btn">Voir les produits</a></center>
+        <div class="text-center">
+            <a href="./pages/produits.html" class="btn btn-warning fw-bold text-black" style="background-color: goldenrod; border: none; padding: 12px 28px;">Voir les produits</a>
+        </div>
     </div>
 
     <!-- PRODUITS -->
@@ -57,43 +59,43 @@
                 </div>
             </div>
 
-            <div class="product-card" data-id="2">
+            <div class="product-card" data-id="8">
                 <img src="image/bas-rouge.jpg" alt="Leggings rouge" class="product-image">
                 <div class="product-info">
                     <h3 class="product-name">Leggings de sport</h3>
                     <p class="product-description">Leggings de première qualité, extrêmement confortable</p>
                     <p class="product-price" data-price="8000">8000f</p>
-                    <button class="btn-add-to-cart" data-id="2">Ajouter au Panier</button>
+                    <button class="btn-add-to-cart" data-id="8">Ajouter au Panier</button>
                 </div>
             </div>
 
-            <div class="product-card" data-id="3">
+            <div class="product-card" data-id="26">
                 <img src="image/voile-rose.jpg" alt="Voile rose" class="product-image">
                 <div class="product-info">
                     <h3 class="product-name">Voile rose</h3>
                     <p class="product-description">Voile extrêmement confortable</p>
                     <p class="product-price" data-price="5000">5000f</p>
-                    <button class="btn-add-to-cart" data-id="3">Ajouter au Panier</button>
+                    <button class="btn-add-to-cart" data-id="26">Ajouter au Panier</button>
                 </div>
             </div>
 
-            <div class="product-card" data-id="4">
+            <div class="product-card" data-id="29">
                 <img src="image/sand-zara-home.jpg" alt="Sandales Zara" class="product-image">
                 <div class="product-info">
                     <h3 class="product-name">Sandales Zara</h3>
                     <p class="product-description">Sandales de haute qualité pointure: 38-45</p>
                     <p class="product-price" data-price="10000">10000f</p>
-                    <button class="btn-add-to-cart" data-id="4">Ajouter au Panier</button>
+                    <button class="btn-add-to-cart" data-id="29">Ajouter au Panier</button>
                 </div>
             </div>
             
-             <div class="product-card" data-id="5">
+             <div class="product-card" data-id="16">
                 <img src="image/guipure-bleue.jpg" alt="Tissu guipure" class="product-image">
                 <div class="product-info">
                     <h3 class="product-name">Tissu Guipure</h3>
                     <p class="product-description">Tissu guipure bleue de haute qualité</p>
                     <p class="product-price" data-price="35000">35000f</p>
-                    <button class="btn-add-to-cart" data-id="5">Ajouter au Panier</button>
+                    <button class="btn-add-to-cart" data-id="16">Ajouter au Panier</button>
                 </div>
             </div>
         </div>
